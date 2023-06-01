@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/" lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>My List</title>
+    <th:block th:replace="layout :: link-css"></th:block>
+</head>
+<body>
+<th:block th:replace="layout :: header"></th:block>
+<div class="container">
+    <h1 th:text="${title}"></h1>
+    <div>
+        <form action="#" method="GET" class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="searchInput">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="searchBooks(event)">Search</button>
+        </form>
+    </div>
+    <table class="table">
+        <tr>
+            <th>Mã nhân viên</th>
+            <th>Tên nhân viên</th>
+            <th>Phái</th>
+            <th>Nơi sinh</th>
+            <th>Mã phòng</th>
+            <th>Lương</th>
+            <th sec:authorize="hasAnyAuthority('ADMIN')">Action</th>
+        </tr>
+        <tr th:each="staff : ${staffs}">
+            <td th:text="${staff.MaNV}"></td>
+            <td th:text="${staff.TenNV}"></td>
+            <td>
+                <img th:if="${staff.Phai == 'nữ'}" src="../../static/img/woman.jpg" alt="Female Image" style="max-width: 50px; max-height: 50px;">
+                <img th:if="${staff.Phai == 'nam'}" src="../../static/img/men.jpg" alt="Male Image" style="max-width: 50px; max-height: 50px;">
+            </td>
+            <td th:text="${staff.NoiSinh}"></td>
+            <td th:text="${staff.MaPhong}"></td>
+            <td th:text="${staff.Luong}"></td>
+           <td sec:authorize="hasAnyAuthority('ADMIN')">
+               <a th:href="@{/staffs/edit(id=__${staff.MaNV}__)}" class="text-info">Edit</a>
+               <a th:href="@{/staffs/delete(id=__${staff.MaNV}__)}" onclick="deleteBook(this); return false;" class="text-danger">Delete</a>
+           </td>
+        </tr>
+    </table>
+    <h1>2080600137-Đặng Tiến Sỹ</h1>
+</div>
+<script th:src="@{/js/jquery-3.5.1.min.js}"></script>
+<script th:inline="javascript">
+ function deleteBook(link) {
+        if (confirm('Are you sure')) {
+            $.ajax({
+                url: $(link).attr('href'),
+                type: 'DELETE',
+                success: result => {
+                    if (!result.success) {
+                        alert(result.message);
+                    } else {
+                        $(link).parent().parent().remove();
+                    }
+                }
+            });
+        }
+    }
+</script>
+<th:block th:replace="layout :: footer"></th:block>
+</body>
+</html>

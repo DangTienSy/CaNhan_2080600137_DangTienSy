@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <th:block th:replace="layout :: link-css"></th:block>
+  <title>Add Staff</title>
+</head>
+<body>
+<th:block th:replace="layout :: header"></th:block>
+<div class="container">
+  <h1>Add Staff</h1>
+  <form th:action="@{/staffs/add}" th:object="${staff}" method="post">
+    <div class="col-6 mb-3">
+      <label class="form-label" for="MaNV"> Mã nhân viên: </label>
+      <input class="form-control" type="text" th:field="*{MaNV}" id="MaNV">
+      <span class="text-danger" th:if="${#fields.hasErrors('MaNV')}" th:errors="*{MaNV}"></span>
+
+      <div class="col-6 mb-3">
+        <label class="form-label" for="TenNV"> Tên nhân viên: </label>
+        <input class="form-control" type="text" th:field="*{TenNV}" id="TenNV">
+        <span class="text-danger" th:if="${#fields.hasErrors('TenNV')}" th:errors="*{TenNV}"></span>
+      </div>
+
+      <div class="col-6 mb-3">
+        <label class="form-label" for="Phai">Phái:</label>
+        <select class="form-control" th:field="*{Phai}" id="Phai">
+          <option value="nam">Nam</option>
+          <option value="nữ">Nữ</option>
+        </select>
+      </div>
+      <div th:if="${staff.Phai == 'nữ'}">
+        <img src="../../static/img/woman.jpg" alt="Female Image" style="max-width: 100%; max-height: 200px;">
+      </div>
+      <div th:unless="${staff.Phai == 'nữ'}">
+        <img src="../../static/img/men.jpg" alt="Male Image" style="max-width: 100%; max-height: 200px;">
+      </div>
+
+      <div class="col-6 mb-3">
+        <label class="form-label" for="NoiSinh">Nơi sinh:</label>
+        <input class="form-control" type="text" th:field="*{NoiSinh}" id="NoiSinh">
+      </div>
+
+      <div class="col-6 mb-3">
+        <label class="form-label" for="MaPhong">Mã phòng:</label>
+        <select class="form-control" id="MaPhong" th:field="*{MaPhong}" >
+          <option value="">-- Select Office --</option>
+          <option th:each="office : ${offices}" th:value="${office.MaPhong}" th:text="${office.TenPhong}"></option>
+        </select>
+        <span class="text-danger" th:if="${#fields.hasErrors('MaPhong')}" th:errors="*{MaPhong}"></span>
+      </div>
+
+      <div class="col-6 mb-3">
+        <label class="form-label" for="Luong">Lương:</label>
+        <input class="form-control" type="number" th:field="*{Luong}" id="Luong">
+        <span class="text-danger" th:if="${#fields.hasErrors('Luong')}" th:errors="*{Luong}"></span>
+      </div>
+      <input type="submit" class="btn btn-primary" value="Save">
+  </form>
+  <br>
+  <a th:href="@{/staffs}">Back to list</a>
+</div>
+<th:block th:replace="layout :: footer"></th:block>
+</body>
+</html>
